@@ -25,6 +25,10 @@ export const getUser = async (req, res) => {
 
 export const getUserByID = async (req, res) => {
   const userID = req.params.id;
+
+
+
+
   const findUser = await prisma.user.findFirst({
     where: {
       id: Number(userID),
@@ -41,7 +45,6 @@ export const getUserByID = async (req, res) => {
   if (!findUser) {
     return res.json({ status: 200, message: "User not found" });
   }
-
   return res.json({ status: 200, data: findUser });
 };
 
