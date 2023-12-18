@@ -1,10 +1,14 @@
 import "dotenv/config";
 import cors from "cors";
-
 import express from "express";
+
+// * Routes files
+import routes from "./routes/index.js";
+
+import swaggerDocs from "./utils/swagger.js"
 const app = express();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 
 const corsOptions = {
   origin: "*",
@@ -22,9 +26,12 @@ app.get("/", (req, res) => {
   );
 });
 
-// * Routes files
-import routes from "./routes/index.js";
 
 app.use(routes);
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+app.listen(PORT, async () => {
+  console.log(`Server listening on port ${PORT}`)
+  await connect();
+
+  swaggerDocs(app, PORT);
+});
