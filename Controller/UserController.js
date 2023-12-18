@@ -25,6 +25,10 @@ export const getUser = async (req, res) => {
 
 export const getUserByID = async (req, res) => {
   const userID = req.params.id;
+
+
+
+
   const findUser = await prisma.user.findFirst({
     where: {
       id: Number(userID),
@@ -41,7 +45,6 @@ export const getUserByID = async (req, res) => {
   if (!findUser) {
     return res.json({ status: 200, message: "User not found" });
   }
-
   return res.json({ status: 200, data: findUser });
 };
 
@@ -77,12 +80,12 @@ export const createUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const userID = req.params.id;
-  const { name, email, password } = req.body;
+  // const userID = req.params.id;
+  const { name, email, password, id } = req.body;
 
   await prisma.user.update({
     where: {
-      id: Number(userID),
+      id: Number(id),
     },
     data: {
       name: name,
@@ -109,21 +112,18 @@ export const deleteUser = async (req, res) => {
 // Login route
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
   try {
     // Find the user by email
     const user = await prisma.user.findUnique({
       where: { email },
     });
-    console.log(user);
     // Check if the user exists
     if (!user) {
       return res.status(401).send("Invalid email or password");
     }
 
     // Compare the hashed password
-    const passwordMatch = (await password) === user.password;
-
+    const passwordMatch = password === user.password;
     // Check if the password is correct
     if (!passwordMatch) {
       return res.status(401).send("Invalid email or password");
@@ -134,11 +134,12 @@ export const login = async (req, res) => {
       process.env.SECRET_KEY,
       { expiresIn: "1h" }
     );
+
     const response = {
       data: user,
       token: token,
     };
-    
+
     res.send(response);
   } catch (error) {
     res.status(400).send("Error during login");

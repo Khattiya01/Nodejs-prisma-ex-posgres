@@ -1,0 +1,185 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+servers:
+  - url: http://localhost:8000
+    description: Optional server description, e.g. Main (production) server
+  - url: http://staging-api.example.com
+    description: Optional server description, e.g. Internal staging server for testing
+paths:
+  /api/user:
+    get:
+      summary: Get a list of users
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        '200':    # status code
+          description: Successful operation
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/User'
+  /api/user/{id}:
+    get:
+      summary: Get a user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to return.
+          schema:
+            type: integer
+      responses:
+          '200':
+            description: Successful operation
+            content:
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/User'
+          '400':
+            description: The specified user ID is invalid (not a number).
+          '404':
+            description: A user with the specified ID was not found.
+          default:
+            description: Unexpected error
+  /api/user/create:
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+              required:
+                - name
+                - email
+                - password
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Unexpected error
+        '404':
+          description: Unexpected error
+        default:
+          description: Unexpected error
+  /api/user/update:
+    put:
+      summary: Update a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+              required:
+                - id
+                - name
+                - email
+                - password
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Unexpected error
+        '404':
+          description: Unexpected error
+        default:
+          description: Unexpected error
+  /api/user/delete/{id}:
+    delete:
+      summary: Delete a user by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Unexpected error
+        '404':
+          description: Unexpected error
+        default:
+          description: Unexpected error
+  /api/user/login:
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Unexpected error
+        '404':
+          description: Unexpected error
+        default:
+          description: Unexpected error
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    UserInput:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
