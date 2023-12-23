@@ -26,9 +26,6 @@ export const getUser = async (req, res) => {
 export const getUserByID = async (req, res) => {
   const userID = req.params.id;
 
-
-
-
   const findUser = await prisma.user.findFirst({
     where: {
       id: Number(userID),
@@ -49,8 +46,7 @@ export const getUserByID = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-  const { name, email, password } = req.body;
-  console.log(name, email, password);
+  const { firstname, lastname, accountName, email, password } = req.body;
   const findUser = await prisma.user.findUnique({
     where: {
       email: email,
@@ -67,7 +63,9 @@ export const createUser = async (req, res) => {
   const newUser = await prisma.user.create({
     data: {
       email: email,
-      name: name,
+      firstname: firstname,
+      lastname: lastname,
+      accountName: accountName,
       password: password,
     },
   });
@@ -80,16 +78,17 @@ export const createUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  // const userID = req.params.id;
-  const { name, email, password, id } = req.body;
+  const { firstname, lastname, accountName, email, password, id } = req.body;
 
   await prisma.user.update({
     where: {
       id: Number(id),
     },
     data: {
-      name: name,
       email: email,
+      firstname: firstname,
+      lastname: lastname,
+      accountName: accountName,
       password: password,
     },
   });
