@@ -174,9 +174,13 @@ components:
       properties:
         id:
           type: integer
-        name:
+        firstname:
+          type: string
+        lastname:
           type: string
         email:
+          type: string
+        accountName:
           type: string
         password:
           type: string
@@ -186,9 +190,13 @@ components:
     UserInput:
       type: object
       properties:
-        name:
+        firstname:
+          type: string
+        lastname:
           type: string
         email:
+          type: string
+        accountName:
           type: string
         password:
           type: string
